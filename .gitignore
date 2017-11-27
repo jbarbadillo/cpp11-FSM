@@ -1,3 +1,9 @@
+build/**
+/build
+Config.cmake
+**/**/config.h
+cmake/**
+
 # Prerequisites
 *.d
 
