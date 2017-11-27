@@ -1,7 +1,21 @@
 #include "state_machine.h"
-#include <algorithm>
-#include <iterator>
 
+#include <iterator>
+#include <algorithm>
+
+FSM::FSM(std::vector<std::string> states,
+	std::string initialState,
+	std::vector<std::string> events,
+	std::vector<std::vector<std::string>> transitions)
+	: _events(events) {
+	for (int i = 0; i < states.size(); i++) {
+		_states.push_back(new FSM::State(states[i]));
+	}
+	this->setInitialState(initialState);
+	for (int i = 0; i<transitions.size(); i++) {
+		this->addTransition(transitions[i][0], transitions[i][1], transitions[i][2]);
+	}
+}
 FSM::State* FSM::getStateByName(const std::string& name){
     auto it = std::find_if(_states.begin(), _states.end(), [=](State *  item){
         return name.compare(item->name)==0;
@@ -73,7 +87,7 @@ void FSM::propagateEvent(const std::string& event){
 bool FSM::setInitialState(const std::string& name){
     if(getStateByName(name) != nullptr){
         _initialState = getStateByName(name);
-        std::cout<<"StateMachine::initialState->"<< name.c_str() <<std::endl;
+        std::cout<<"FSM::initialState->"<< name.c_str() <<std::endl;
         return true;
     }
     return false;
@@ -86,7 +100,7 @@ std::string FSM::getCurrentState(){
     }
 }
 
-bool FSM::startSM(){
+bool FSM::startFSM(){
     if(_initialState != nullptr &&  checkValidStates()){
         if(_currentState == nullptr){
             _currentState = _initialState;
@@ -98,17 +112,17 @@ bool FSM::startSM(){
     }
     return false;
 }
-bool FSM::updateSM(){
+bool FSM::updateFSM(){
     if(_currentState!=nullptr && _started){
         _currentState->run();
         return true;
     }
     return false;
 }
-bool FSM::stopSM(){
+bool FSM::stopFSM(){
     if(_started){
         _started = false;
-        std::cout<<"StateMachine::Stopped"<<std::endl;
+        std::cout<<"FSM::Stopped"<<std::endl;
         return true;
     }
     return false;
@@ -118,8 +132,8 @@ bool FSM::checkValidStates(){
     return std::find_if(_states.begin(),_states.end(), [=](State* state){
         bool invalid ((state->run == nullptr) || (state->transitionMap.size()<1));
         if (invalid) {
-            std::cerr<<"StateMachine::Cannot Start! States not properly initialized"<<std::endl;
-            std::cerr<<"StateMachine::Error at state "<< state->name.c_str()<<std::endl;
+            std::cerr<<"FSM::Cannot Start! States not properly initialized"<<std::endl;
+            std::cerr<<"FSM::Error at state "<< state->name.c_str()<<std::endl;
         }
         return invalid;
     }) == _states.end();
