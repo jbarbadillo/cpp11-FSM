@@ -11,8 +11,6 @@ IF(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "2.8")
   SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPES})
 ENDIF()
 
-#Install binaries
-
 # Configure variables
 # ------------------------------------------------------------------------------------------------------
 
@@ -25,37 +23,20 @@ SET(${PROJ_MAIN_NAME}_PATH_LIBS  ${PROJECT_BINARY_DIR}/gen                   CAC
 SET(${PROJ_MAIN_NAME}_PATH_EXE   ${PROJECT_BINARY_DIR}/gen                   CACHE PATH "This directory contains executables")
 SET(${PROJ_MAIN_NAME}_PATH_DATA  ${${PROJ_MAIN_NAME}_PATH_MAIN}/extras/data/ CACHE PATH "This directory contains all DATA and RESOURCES")
 
-#SET(GTEST_PATH 			${ALRN_PATH}/../thirdparties/googletest-master 	CACHE PATH "Path for google test")
-
-# Build type
-#IF(TARGET_PLATFORM STREQUAL TARGET_WIN32)
-#  SET(${PROJ_MAIN_NAME}_LIB_TYPE "STATIC" CACHE STRING "Choose STATIC or SHARED to generate libraries" FORCE)
-#ELSEIF(TARGET_PLATFORM STREQUAL TARGET_LINUX)
-#  SET(${PROJ_MAIN_NAME}_LIB_TYPE "SHARED" CACHE STRING "Choose STATIC or SHARED to generate libraries" FORCE)
-#ELSE()
-#   MESSAGE(FATAL_ERROR "ERROR ${PROJ_MAIN_NAME}_LIB_TYPE")
-#ENDIF()
+SET(GTEST_PATH 			 ${CMAKE_SOURCE_DIR}/thirdparties/googletest-master 	CACHE PATH "Path for google test")
 
 add_definitions(-std=c++11)
-#enable_testing()
+enable_testing()
 
 # Configuration current project
 # ------------------------------------------------------------------------------------------------------
 
 # Project Logic
 # ------------------------------------------------------------------------------------------------------
-IF(NOT TARGET_PLATFORM STREQUAL TARGET_NONE)
-
-
-  ######################################################################################
-  # ADD SUB FOLDERS
-  ######################################################################################
+IF(NOT TARGET_PLATFORM STREQUAL TARGET_NONE)  
    ADD_SUBDIRECTORY(modules)
-   #ADD_SUBDIRECTORY(tests)
-
+   ADD_SUBDIRECTORY(tests)
 
 ELSE()
   message(FATAL_ERROR " TARGET no autodetected. Please, select a TARGET manually. ")
 ENDIF()
-
-#add configuration file Config.cmake.in
