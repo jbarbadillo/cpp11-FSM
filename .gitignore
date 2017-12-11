@@ -3,6 +3,8 @@ build/**
 Config.cmake
 **/**/config.h
 cmake/**
+x64/
+CmakeLists.txt.user
 
 # Prerequisites
 *.d
